@@ -2,3 +2,4 @@ Django
 psycopg2>=2.8
 dj-database-url
 whitenoise[brotli]
+gunicorn
