@@ -15,4 +15,4 @@ def index(request):
     else:
         form = SearchForm()
 
-    return render(request, "index.html", {"form": form})
+    return render(request, "index.html", {"form": form, "search": search})

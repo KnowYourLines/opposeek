@@ -5,10 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Search">
-    </form>
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Search">
+</form>
+{% if search %}
+<br/><br/>
+Your search:
+<a target="_blank" href="https://www.google.com/search?q={{ search }}">{{ search }}</a>
+{% endif %}
 </body>
 </html>
