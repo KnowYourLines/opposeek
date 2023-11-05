@@ -21,3 +21,4 @@ services:
       - SECRET_KEY=!!f1r=78mf)an7i&t8yqy*#e%*wwcx59am^8(xor#11uh^98kt
       - DEBUG=True
       - ALLOWED_HOSTS=localhost,192.168.1.104
+      - SERPER_API_KEY=

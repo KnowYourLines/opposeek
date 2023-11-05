@@ -23,6 +23,8 @@ services:
         fromDatabase:
           name: opposeek-db
           property: connectionString
+      - key: SERPER_API_KEY
+        sync: false
 
 databases:
   - name: opposeek-db
