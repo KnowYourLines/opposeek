@@ -7,7 +7,7 @@ services:
     plan: free
     branch: main
     buildCommand: "pip install -r requirements.txt; python manage.py makemigrations opposeek; python manage.py migrate; python manage.py collectstatic --no-input"
-    startCommand: "gunicorn server.wsgi:application"
+    startCommand: "gunicorn server.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: PORT
         value: 8000
