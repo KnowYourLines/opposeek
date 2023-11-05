@@ -38,6 +38,26 @@ def index(request):
             page_body = BeautifulSoup(
                 result_page.content, "html.parser"
             ).body.text.strip()
+            page_body = "".join(page_body.split())
+            stopwords = [
+                "a",
+                "an",
+                "and",
+                "at",
+                "but",
+                "how",
+                "in",
+                "is",
+                "on",
+                "or",
+                "the",
+                "to",
+                "what",
+                "will",
+            ]
+            tokens = page_body.split()
+            clean_tokens = [t for t in tokens if t not in stopwords]
+            page_body = " ".join(clean_tokens)
             context_text += "\n" + page_body
         chatgpt_responses = send(
             prompt=f"Generate an array of opposing Google searches to my search: {search}",
