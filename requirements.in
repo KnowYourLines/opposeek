@@ -4,3 +4,6 @@ dj-database-url
 whitenoise[brotli]
 gunicorn
 requests
+beautifulsoup4
+tiktoken
+openai
