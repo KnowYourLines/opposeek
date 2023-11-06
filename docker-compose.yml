@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=postgres
   web:
     build: .
-    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python manage.py makemigrations opposeek; python manage.py migrate; python manage.py collectstatic --no-input; gunicorn server.wsgi:application --bind 0.0.0.0:8000'
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python manage.py makemigrations opposeek; python manage.py migrate; python manage.py collectstatic --no-input; gunicorn server.wsgi:application --timeout 120 --bind 0.0.0.0:8000'
     volumes:
       - .:/code
     ports:

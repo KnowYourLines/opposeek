@@ -52,6 +52,7 @@ def index(request):
             text_data=page_body,
         )
         chatgpt_response = chatgpt_response.replace('"', "").split("\n")
+        logging.info(chatgpt_response)
         chatgpt_response = [search for search in chatgpt_response if ". " in search]
         try:
             opposing_searches = [search.split(" ", 1)[1] for search in chatgpt_response]
