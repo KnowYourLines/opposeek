@@ -32,36 +32,22 @@ def index(request):
             .json()
             .get("organic", [])
         )
-        context_text = ""
+        page_body = ""
+        result_page = None
         for result in results:
-            result_page = requests.get(result["link"])
+            try:
+                result_page = requests.get(result["link"], timeout=10)
+            except requests.exceptions.Timeout:
+                continue
+
+        while not page_body and result_page:
             page_body = BeautifulSoup(
                 result_page.content, "html.parser"
             ).body.text.strip()
-            page_body = "".join(page_body.split())
-            stopwords = [
-                "a",
-                "an",
-                "and",
-                "at",
-                "but",
-                "how",
-                "in",
-                "is",
-                "on",
-                "or",
-                "the",
-                "to",
-                "what",
-                "will",
-            ]
-            tokens = page_body.split()
-            clean_tokens = [t for t in tokens if t not in stopwords]
-            page_body = " ".join(clean_tokens)
-            context_text += "\n" + page_body
+
         chatgpt_responses = send(
-            prompt=f"Generate an array of opposing Google searches to my search: {search}",
-            text_data=context_text,
+            prompt=f"Generate a numbered list of opposing Google searches to my search: {search}",
+            text_data=page_body,
         )
         print(chatgpt_responses)
     else:
