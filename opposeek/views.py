@@ -28,7 +28,7 @@ def index(request):
             return HttpResponseRedirect(f"/?search={form.cleaned_data['search']}")
     elif search:
         form = SearchForm(request.GET)
-        payload = json.dumps({"q": search})
+        payload = json.dumps({"q": search, "gl": "gb"})
         results = (
             requests.request("POST", SERPER_URL, headers=SERPER_HEADERS, data=payload)
             .json()
