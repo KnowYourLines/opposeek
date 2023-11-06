@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>OppoSeek</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Search">
-</form>
-{% if search %}
-    {% if opposing %}
-        <br/><br/>
-        Opposing searches:
-        {% for search in opposing %}
+    <div class="container text-center">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Search">
+        </form>
+        {% if search %}
+            {% if opposing %}
+                <br/><br/>
+                Opposing searches:
+                {% for search in opposing %}
+                    <br/><br/>
+                    <a target="_blank" href="https://www.google.com/search?q={{ search }}">{{ search }}</a>
+                {% endfor %}
+            {% endif %}
             <br/><br/>
+            Your search:
             <a target="_blank" href="https://www.google.com/search?q={{ search }}">{{ search }}</a>
-        {% endfor %}
-    {% endif %}
-    <br/><br/>
-    Your search:
-    <a target="_blank" href="https://www.google.com/search?q={{ search }}">{{ search }}</a>
-{% endif %}
+        {% endif %}
+    </div>
 </body>
 </html>
