@@ -1,3 +1,4 @@
+import logging
 import os
 import requests
 import json
@@ -51,7 +52,10 @@ def index(request):
             text_data=page_body,
         )
         chatgpt_response = chatgpt_response.replace('"', "").split("\n")
-        opposing_searches = [search.split(" ", 1)[1] for search in chatgpt_response]
+        try:
+            opposing_searches = [search.split(" ", 1)[1] for search in chatgpt_response]
+        except IndexError as exc:
+            logging.error(f"{exc} for {chatgpt_response}")
     else:
         form = SearchForm()
 
