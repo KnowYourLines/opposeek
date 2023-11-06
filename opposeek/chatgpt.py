@@ -10,9 +10,9 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 def send(
     prompt=None,
     text_data=None,
-    chat_model="gpt-4",
-    model_token_limit=8192,
-    max_tokens=8192,
+    chat_model="gpt-3.5-turbo",
+    model_token_limit=4097,
+    max_tokens=2500,
 ):
     """
     Send the prompt at the start of the conversation and then send chunks of text_data to ChatGPT via the OpenAI API.
@@ -50,15 +50,7 @@ def send(
     chunks = [tokenizer.decode(chunk) for chunk in chunks]
 
     responses = []
-    messages = [
-        {"role": "user", "content": prompt},
-        {
-            "role": "user",
-            "content": "To provide the context for the above prompt, I will send you text in parts. "
-            "When I am finished, I will tell you 'ALL PARTS SENT'. "
-            "Do not answer until you have received all the parts.",
-        },
-    ]
+    messages = []
 
     for chunk in chunks:
         messages.append({"role": "user", "content": chunk})
@@ -70,12 +62,8 @@ def send(
         ):
             messages.pop(1)  # Remove the oldest chunk
 
-        response = openai.ChatCompletion.create(model=chat_model, messages=messages)
-        chatgpt_response = response.choices[0].message["content"].strip()
-        responses.append(chatgpt_response)
-
     # Add the final "ALL PARTS SENT" message
-    messages.append({"role": "user", "content": "ALL PARTS SENT"})
+    messages.append({"role": "user", "content": prompt})
     response = openai.ChatCompletion.create(model=chat_model, messages=messages)
     final_response = response.choices[0].message["content"].strip()
     responses.append(final_response)
