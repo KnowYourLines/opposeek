@@ -38,7 +38,7 @@ def index(request):
         result_page = None
         for result in results:
             try:
-                result_page = requests.get(result["link"], timeout=10)
+                result_page = requests.get(result["link"], timeout=3)
             except requests.exceptions.Timeout:
                 continue
 
