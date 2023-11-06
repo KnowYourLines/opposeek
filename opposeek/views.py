@@ -20,6 +20,7 @@ SERPER_HEADERS = {
 
 def index(request):
     search = request.GET.get("search")
+    opposing_searches = []
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -45,12 +46,17 @@ def index(request):
                 result_page.content, "html.parser"
             ).body.text.strip()
 
-        chatgpt_responses = send(
+        chatgpt_response = send(
             prompt=f"Generate a numbered list of opposing Google searches to my search: {search}",
             text_data=page_body,
         )
-        print(chatgpt_responses)
+        chatgpt_response = chatgpt_response.replace('"', "").split("\n")
+        opposing_searches = [search.split(" ", 1)[1] for search in chatgpt_response]
     else:
         form = SearchForm()
 
-    return render(request, "index.html", {"form": form, "search": search})
+    return render(
+        request,
+        "index.html",
+        {"form": form, "search": search, "opposing": opposing_searches},
+    )
