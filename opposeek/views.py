@@ -27,27 +27,36 @@ def index(request):
     if request.method == "POST":
         form = SearchForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect(f"/?search={form.cleaned_data['search']}")
+            return HttpResponseRedirect(
+                f"/?search={form.cleaned_data['search']}&is_recent_trend={form.cleaned_data['is_recent_trend']}"
+            )
     elif search:
-        form = SearchForm(request.GET)
-        payload = json.dumps({"q": search, "gl": "gb"})
-        results = (
-            requests.request("POST", SERPER_URL, headers=SERPER_HEADERS, data=payload)
-            .json()
-            .get("organic", [])
-        )
+        query_params = request.GET.dict()
+        is_recent_trend = query_params.get("is_recent_trend") == "True"
+        query_params["is_recent_trend"] = is_recent_trend
+        form = SearchForm(query_params)
         page_body = ""
-        result_page = None
-        for result in results:
-            try:
-                result_page = requests.get(result["link"], timeout=3)
-            except requests.exceptions.Timeout:
-                continue
 
-        while not page_body and result_page:
-            page_body = BeautifulSoup(
-                result_page.content, "html.parser"
-            ).body.text.strip()
+        if is_recent_trend:
+            payload = json.dumps({"q": search, "gl": "gb"})
+            results = (
+                requests.request(
+                    "POST", SERPER_URL, headers=SERPER_HEADERS, data=payload
+                )
+                .json()
+                .get("organic", [])
+            )
+            result_page = None
+            for result in results:
+                try:
+                    result_page = requests.get(result["link"], timeout=3)
+                except requests.exceptions.Timeout:
+                    continue
+
+            while not page_body and result_page:
+                page_body = BeautifulSoup(
+                    result_page.content, "html.parser"
+                ).body.text.strip()
 
         chatgpt_response = send(
             prompt=f"Generate a numbered list of opposing Google searches to my search: {search}",

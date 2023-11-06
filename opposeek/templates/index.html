@@ -11,9 +11,20 @@
         <h1>OppoSeek</h1>
         <form action="" method="post">
             {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Search">
+            {{ form.non_field_errors }}
+            <div class="fieldWrapper">
+                {{ form.search.errors }}
+                {{ form.search.label_tag }}
+                {{ form.search }}
+                <input type="submit" value="Search">
+            </div>
+            <div class="fieldWrapper">
+                {{ form.is_recent_trend.errors }}
+                {{ form.is_recent_trend }}
+                {{ form.is_recent_trend.label_tag }}
+            </div>
         </form>
+
         {% if search %}
             {% if opposing %}
                 <br/><br/>
