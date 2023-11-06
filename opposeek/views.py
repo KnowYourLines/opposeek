@@ -1,5 +1,7 @@
 import logging
 import os
+import re
+
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -51,13 +53,21 @@ def index(request):
             prompt=f"Generate a numbered list of opposing Google searches to my search: {search}",
             text_data=page_body,
         )
-        chatgpt_response = chatgpt_response.replace('"', "").split("\n")
+        chatgpt_response = (
+            chatgpt_response.replace('"', "").replace("'", "").split("\n")
+        )
         logging.info(chatgpt_response)
-        chatgpt_response = [search for search in chatgpt_response if ". " in search]
-        try:
-            opposing_searches = [search.split(" ", 1)[1] for search in chatgpt_response]
-        except IndexError as exc:
-            logging.error(f"{exc} for {chatgpt_response}")
+        filtered_chatgpt_response = [
+            search
+            for search in chatgpt_response
+            if re.compile(r"^\d+\s*[.)]?\s+").match(search)
+        ]
+        logging.info(filtered_chatgpt_response)
+        opposing_searches = [
+            re.sub(r"^\d+\s*[.)]?\s+", "", search)
+            for search in filtered_chatgpt_response
+        ]
+        logging.info(opposing_searches)
     else:
         form = SearchForm()
 
